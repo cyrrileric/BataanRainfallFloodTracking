@@ -14,11 +14,23 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Bataan Weather Alerts - Real-time Rainfall Warnings",
-  description: "Real-time rainfall warnings and weather alerts for Bataan Province, Philippines. Data from PAGASA updated every 10 minutes.",
-  keywords: "Bataan, weather, rainfall, alerts, warnings, Philippines, PAGASA, real-time",
+  description:
+    "Real-time rainfall warnings and weather alerts for Bataan Province, Philippines. Data from PAGASA updated every 10 minutes.",
+  keywords:
+    "Bataan, weather, rainfall, alerts, warnings, Philippines, PAGASA, real-time",
   authors: [{ name: "Bataan Weather Team" }],
   viewport: "width=device-width, initial-scale=1",
+  icons: {
+    icon: [
+      { url: "/favicon/favicon-96x96.png", type: "image/png", sizes: "96x96" },
+      { url: "/favicon/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon/favicon.ico" }, // default
+    ],
+    apple: "/favicon/apple-touch-icon.png",
+  },
+  manifest: "/favicon/site.webmanifest",
 };
+
 
 export default function RootLayout({
   children,
