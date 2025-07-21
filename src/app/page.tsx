@@ -71,6 +71,7 @@ export default function Home() {
           <div className="text-center text-gray-600">
             <p>Data source: <a href="https://panahon.gov.ph" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">PAGASA</a></p>
             <p className="text-sm mt-1">Updates automatically every 10 minutes</p>
+            <p className="text-sm mt-1">Developed and Designed by <a href="https://praryo.lol" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Praryo</a></p>
           </div>
         </div>
       </footer>
