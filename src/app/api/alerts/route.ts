@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 import { RainfallAlert } from '@/types';
-import { API_URL, filterBataanAlerts, expandAlertsByMunicipalities } from '@/utils/dataHelpers';
+import { API_URL, filterBataanAlerts, expandAlertsByMunicipalities, deduplicateAlerts } from '@/utils/dataHelpers';
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,8 +26,12 @@ export async function GET(request: NextRequest) {
     const allAlerts: RainfallAlert[] = response.data.data.alert_data;
     console.log(`Fetched ${allAlerts.length} total alerts`);
     
+    // Remove duplicates based on identifier
+    const uniqueAlerts = deduplicateAlerts(allAlerts);
+    console.log(`Removed ${allAlerts.length - uniqueAlerts.length} duplicate alerts`);
+    
     // Filter for Bataan province only
-    const bataanAlerts = filterBataanAlerts(allAlerts);
+    const bataanAlerts = filterBataanAlerts(uniqueAlerts);
     console.log(`Found ${bataanAlerts.length} alerts for Bataan`);
     
     // Expand alerts by municipalities

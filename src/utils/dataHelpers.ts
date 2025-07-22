@@ -2,6 +2,21 @@ import { RainfallAlert } from '@/types';
 
 export const API_URL = 'https://panahon.gov.ph/api/v1/cap-alerts';
 
+// Remove duplicate alerts based on identifier
+export function deduplicateAlerts(alerts: RainfallAlert[]): RainfallAlert[] {
+  const seen = new Set<string>();
+  const uniqueAlerts: RainfallAlert[] = [];
+  
+  alerts.forEach(alert => {
+    if (!seen.has(alert.identifier)) {
+      seen.add(alert.identifier);
+      uniqueAlerts.push(alert);
+    }
+  });
+  
+  return uniqueAlerts;
+}
+
 // Filter alerts for Bataan province only and expand by municipalities
 export function filterBataanAlerts(alerts: RainfallAlert[]): RainfallAlert[] {
   const bataanAlerts: RainfallAlert[] = [];
