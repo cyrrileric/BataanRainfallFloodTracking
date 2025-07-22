@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { RainfallAlert, DashboardStats } from '@/types';
-import { extractBataanInfo } from '@/utils/dataHelpers';
+import { RainfallAlert } from '@/types';
 
 interface UseWeatherDataReturn {
   alerts: RainfallAlert[];

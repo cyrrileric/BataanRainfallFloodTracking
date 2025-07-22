@@ -39,12 +39,3 @@ export interface ApiResponse {
   timestamp: string;
   success: boolean;
 }
-
-export interface DashboardStats {
-  currentAlerts: number;
-  redAlerts: number;
-  orangeAlerts: number;
-  yellowAlerts: number;
-  expectingAlerts: number;
-  lastUpdated: string;
-}
