@@ -1,13 +1,11 @@
 'use client';
 
 import { useWeatherData } from '@/hooks/useWeatherData';
-// import DashboardStatsComponent from '@/components/DashboardStats';
 import AlertsList from '@/components/AlertsList';
 
 export default function Home() {
   const {
     alerts,
-    stats,
     isLoading,
     error,
     lastUpdated,
@@ -57,9 +55,6 @@ export default function Home() {
             <strong>Error:</strong> {error}
           </div>
         )}
-
-        {/* Dashboard Stats */}
-        {/* <DashboardStatsComponent stats={stats} isLoading={isLoading} /> */}
 
         {/* Current Alerts */}
         <AlertsList alerts={alerts} isLoading={isLoading} />

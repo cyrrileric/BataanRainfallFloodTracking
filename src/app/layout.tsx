@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     "Real-time rainfall warnings and weather alerts for Bataan Province, Philippines. Data from PAGASA updated every 10 minutes.",
   keywords:
     "Bataan, weather, rainfall, alerts, warnings, Philippines, PAGASA, real-time",
-  authors: [{ name: "Bataan Weather Team" }],
+  authors: [{ name: "Praryo" }],
   viewport: "width=device-width, initial-scale=1",
   icons: {
     icon: [

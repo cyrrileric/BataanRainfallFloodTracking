@@ -6,7 +6,6 @@ import { extractBataanInfo } from '@/utils/dataHelpers';
 
 interface UseWeatherDataReturn {
   alerts: RainfallAlert[];
-  stats: DashboardStats;
   isLoading: boolean;
   error: string | null;
   lastUpdated: string | null;
@@ -18,40 +17,6 @@ export function useWeatherData(): UseWeatherDataReturn {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
-
-  // Calculate dashboard stats from current alerts
-  const stats: DashboardStats = {
-    currentAlerts: alerts.length,
-    redAlerts: alerts.filter(alert => {
-      const bataanInfo = extractBataanInfo(alert);
-      if (bataanInfo.warningLevel === 'RED') return true;
-      
-      const type = alert.type?.toLowerCase() || alert.subtype?.toLowerCase() || '';
-      return type.includes('red') || type.includes('warning') || 
-             (type.includes('flood') && alert.subtype?.toLowerCase().includes('extreme'));
-    }).length,
-    orangeAlerts: alerts.filter(alert => {
-      const bataanInfo = extractBataanInfo(alert);
-      if (bataanInfo.warningLevel === 'ORANGE') return true;
-      
-      const type = alert.type?.toLowerCase() || alert.subtype?.toLowerCase() || '';
-      return type.includes('orange') || type.includes('watch') ||
-             (type.includes('flood') && alert.subtype?.toLowerCase().includes('severe'));
-    }).length,
-    yellowAlerts: alerts.filter(alert => {
-      const bataanInfo = extractBataanInfo(alert);
-      if (bataanInfo.warningLevel === 'YELLOW') return true;
-      
-      const type = alert.type?.toLowerCase() || alert.subtype?.toLowerCase() || '';
-      return type.includes('yellow') || type.includes('advisory') || type.includes('thunderstorm') ||
-             type.includes('flood');
-    }).length,
-    expectingAlerts: alerts.filter(alert => {
-      const type = alert.type?.toLowerCase() || alert.subtype?.toLowerCase() || '';
-      return type.includes('expecting') || type.includes('forecast');
-    }).length,
-    lastUpdated: lastUpdated || 'Never'
-  };
 
   // Fetch current alerts
   const fetchAlerts = useCallback(async () => {
@@ -95,7 +60,6 @@ export function useWeatherData(): UseWeatherDataReturn {
 
   return {
     alerts,
-    stats,
     isLoading,
     error,
     lastUpdated,

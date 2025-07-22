@@ -2,7 +2,6 @@ import { RainfallAlert } from '@/types';
 
 export const API_URL = 'https://panahon.gov.ph/api/v1/cap-alerts';
 
-// Remove duplicate alerts based on identifier
 export function deduplicateAlerts(alerts: RainfallAlert[]): RainfallAlert[] {
   const seen = new Set<string>();
   const uniqueAlerts: RainfallAlert[] = [];
@@ -17,14 +16,12 @@ export function deduplicateAlerts(alerts: RainfallAlert[]): RainfallAlert[] {
   return uniqueAlerts;
 }
 
-// Filter alerts for Bataan province only and expand by municipalities
 export function filterBataanAlerts(alerts: RainfallAlert[]): RainfallAlert[] {
   const bataanAlerts: RainfallAlert[] = [];
   
   alerts.forEach(alert => {
     let isBataanAlert = false;
     
-    // Check if any of the provinces in the alert include Bataan
     if (alert.provinces && typeof alert.provinces === 'object') {
       Object.values(alert.provinces).forEach(province => {
         if (province.province?.toLowerCase().includes('bataan')) {
@@ -33,7 +30,6 @@ export function filterBataanAlerts(alerts: RainfallAlert[]): RainfallAlert[] {
       });
     }
     
-    // Check if alert message mentions Bataan
     if (alert.message?.toLowerCase().includes('bataan') || 
         alert.generated_message?.toLowerCase().includes('bataan')) {
       isBataanAlert = true;
@@ -47,7 +43,6 @@ export function filterBataanAlerts(alerts: RainfallAlert[]): RainfallAlert[] {
   return bataanAlerts;
 }
 
-// Extract Bataan-specific information from an alert
 export function extractBataanInfo(alert: RainfallAlert) {
   const info = {
     province: 'Bataan',
@@ -68,10 +63,8 @@ export function extractBataanInfo(alert: RainfallAlert) {
     });
   }
   
-  // Parse message for warning levels and municipalities
   const message = alert.message || alert.generated_message || '';
   
-  // Extract warning level for Bataan
   const redMatch = message.match(/RED WARNING LEVEL:([^.]+)/i);
   if (redMatch && redMatch[1].toLowerCase().includes('bataan')) {
     info.warningLevel = 'RED';
@@ -87,7 +80,6 @@ export function extractBataanInfo(alert: RainfallAlert) {
     info.warningLevel = 'YELLOW';
   }
   
-  // Extract rivers/municipalities mentioned for Bataan in flood advisories
   const bataanMatch = message.match(/\*\*Bataan\*\*\s*-\s*([^+\n]+)/i);
   if (bataanMatch) {
     const description = bataanMatch[1];
@@ -97,15 +89,12 @@ export function extractBataanInfo(alert: RainfallAlert) {
         const riverList = riverMatch[1].split(/\s+and\s+|\s*,\s*/).map((r: string) => r.trim());
         info.rivers = riverList;
         
-        // For flood advisories, rivers often correspond to municipalities in Bataan
-        // Common Bataan municipalities that match river names or are commonly mentioned
         const bataanMunicipalities = [
           'Balanga', 'Morong', 'Bagac', 'Mariveles', 'Abucay', 'Samal', 
           'Orani', 'Hermosa', 'Dinalupihan', 'Limay', 'Orion', 'Pilar'
         ];
         
         riverList.forEach(river => {
-          // Check if river name matches a municipality
           const municipalityMatch = bataanMunicipalities.find(municipality => 
             river.toLowerCase().includes(municipality.toLowerCase()) || 
             municipality.toLowerCase().includes(river.toLowerCase())
@@ -116,10 +105,8 @@ export function extractBataanInfo(alert: RainfallAlert) {
           }
         });
         
-        // If no direct matches, treat river names as potential municipality indicators
         if (info.municipalities.length === 0) {
           riverList.forEach(river => {
-            // Capitalize first letter for display
             const cleanRiver = river.charAt(0).toUpperCase() + river.slice(1).toLowerCase();
             if (!info.municipalities.includes(cleanRiver)) {
               info.municipalities.push(cleanRiver);
@@ -130,7 +117,6 @@ export function extractBataanInfo(alert: RainfallAlert) {
     }
   }
   
-  // Also check for municipalities mentioned directly in Bataan context
   if (message.toLowerCase().includes('bataan')) {
     const bataanMunicipalities = [
       'Balanga', 'Morong', 'Bagac', 'Mariveles', 'Abucay', 'Samal', 
@@ -148,14 +134,12 @@ export function extractBataanInfo(alert: RainfallAlert) {
   return info;
 }
 
-// Create separate alert entries for each municipality mentioned in Bataan alerts
 export function expandAlertsByMunicipalities(alerts: RainfallAlert[]): Array<RainfallAlert & { municipalityName?: string }> {
   const expandedAlerts: Array<RainfallAlert & { municipalityName?: string }> = [];
   
   alerts.forEach(alert => {
     const bataanInfo = extractBataanInfo(alert);
     
-    // If we have specific municipalities, create separate entries for each
     if (bataanInfo.municipalities.length > 0) {
       bataanInfo.municipalities.forEach(municipality => {
         expandedAlerts.push({
@@ -164,7 +148,6 @@ export function expandAlertsByMunicipalities(alerts: RainfallAlert[]): Array<Rai
         });
       });
     } else {
-      // If no specific municipalities, add the general alert
       expandedAlerts.push({
         ...alert,
         municipalityName: 'General Alert'

@@ -1,4 +1,3 @@
-// Types for the Panahon API response
 export interface RainfallAlert {
   event: string;
   type: string;
@@ -14,11 +13,11 @@ export interface RainfallAlert {
   expecting_intensity?: string;
   weather_systems?: string;
   polygon_color?: string;
-  municipalityName?: string; // Added for expanded alerts
+  municipalityName?: string;
   provinces: {
     [key: string]: {
       province: string;
-      shape?: string; // JSON string containing coordinates
+      shape?: string;
       municipality?: string;
       psgc_code?: string;
       type?: string;

@@ -7,7 +7,6 @@ export async function GET(request: NextRequest) {
   try {
     console.log('Fetching data from Panahon API...');
     
-    // Fetch data from the Panahon API
     const response = await axios.get(API_URL, {
       timeout: 30000, // 30 second timeout
       headers: {
@@ -18,7 +17,6 @@ export async function GET(request: NextRequest) {
 
     console.log(`API response status: ${response.status}`);
 
-    // Check if the response has the expected structure
     if (!response.data || !response.data.success || !response.data.data || !Array.isArray(response.data.data.alert_data)) {
       throw new Error(`Invalid API response structure: ${JSON.stringify(response.data)}`);
     }
@@ -26,15 +24,12 @@ export async function GET(request: NextRequest) {
     const allAlerts: RainfallAlert[] = response.data.data.alert_data;
     console.log(`Fetched ${allAlerts.length} total alerts`);
     
-    // Remove duplicates based on identifier
     const uniqueAlerts = deduplicateAlerts(allAlerts);
     console.log(`Removed ${allAlerts.length - uniqueAlerts.length} duplicate alerts`);
     
-    // Filter for Bataan province only
     const bataanAlerts = filterBataanAlerts(uniqueAlerts);
     console.log(`Found ${bataanAlerts.length} alerts for Bataan`);
     
-    // Expand alerts by municipalities
     const expandedAlerts = expandAlertsByMunicipalities(bataanAlerts);
     console.log(`Expanded to ${expandedAlerts.length} municipal alerts`);
     
